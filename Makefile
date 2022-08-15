@@ -5,4 +5,10 @@ publish:
 				npm publish --dry-run
 
 lint:
-				npx eslint bin/** src/** __tests__/**
+				npx eslint .
+
+test:
+				npm test
+
+develop:
+				npx webpack serve
