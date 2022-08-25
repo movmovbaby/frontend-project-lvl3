@@ -1,5 +1,5 @@
 import '../scss/styles.scss';
-// import * as bootstrap from 'bootstrap';
+import isEmpty from 'lodash/isEmpty.js';
 import * as yup from 'yup';
 import onChange from 'on-change';
 
@@ -8,15 +8,10 @@ const schema = yup.object().shape({
 },
 );
 
-const validate = (input) => schema.validate(input)
-  .then((result) => {
-    console.log(result);
-    //return
-  })
-  .catch((error) => {
-    console.log(error)
-    //return
-  });
+const validate = (input) =>
+  schema.validate(input)
+    .then(() => { })
+    .catch((error) => error);
 
 
 const elements = {
@@ -28,14 +23,38 @@ const elements = {
   submitButton: document.querySelector('input[name="url"]')
 };
 
+const handleProcessState = (elements, processState) => {
+  switch (processState) {
+    case 'sent':
+      elements.feedback.textContent = 'RSS успешно загружен';
+      elements.feedback.classList.remove('text-danger');
+      elements.feedback.classList.add('text-success');
+      break;
+
+    case 'error':
+      elements.submitButton.disabled = false;
+      elements.feedback.textContent = 'Ссылка должна быть валидным URL';
+      elements.feedback.classList.remove('text-success');
+      elements.feedback.classList.add('text-danger');
+      break;
+
+    case 'sending':
+      elements.submitButton.disabled = true;
+      break;
+
+    case 'filling':
+      elements.submitButton.disabled = false;
+      break;
+
+    default:
+      throw new Error(`Unknown process state: ${processState}`);
+  }
+};
+
 const render = (elements) => (path, value, prevValue) => {
   switch (path) {
     case 'form.processState':
       handleProcessState(elements, value);
-      break;
-
-    case 'form.processError':
-      handleProcessError();
       break;
 
     case 'form.valid':
@@ -52,29 +71,24 @@ const render = (elements) => (path, value, prevValue) => {
 };
 
 const state = onChange({
+  feeds: [],
   form: {
     valid: true,
     processState: 'filling',
-    processError: null,
-    errors: {},
     fields: {
       input: '',
     },
   },
 }, render(elements));
 
-Object.entries(elements.fields).forEach(([fieldName, fieldElement]) => {
-  fieldElement.addEventListener('input', (e) => {
-    const { value } = e.target;
-    state.form.fields[fieldName] = value;
-    const errors = validate(state.form.fields);
-    state.form.errors = errors;
-    state.form.valid = isEmpty(errors);
-  });
-})
 
 elements.form.addEventListener('submit', (e) => {
   e.preventDefault();
-  state.form.processState = 'sending';
-  state.form.processError = null;
+  const formData = new FormData(e.target);
+  const value = formData.get('url');
+  state.form.fields['input'] = value;
+
+  const errors = validate(state.form.fields);
+
+  state.form.valid = isEmpty(errors);
 });
