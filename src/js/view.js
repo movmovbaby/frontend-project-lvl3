@@ -1,8 +1,5 @@
 import onChange from 'on-change';
-
-const RSSInvalid = 'Ссылка должна быть валидным URL';
-const RSSValid = 'RSS успешно загружен';
-const RSSDuplicate = 'RSS уже существует';
+import i18n from 'i18next';
 
 const handleProcessState = (elements, processState) => {
   switch (processState) {
