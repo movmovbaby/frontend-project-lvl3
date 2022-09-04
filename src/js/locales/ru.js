@@ -6,8 +6,10 @@ export default {
         urlInvalid: 'Ссылка должна быть валидным URL',
         urlDuplicate: 'RSS уже существует',
         urlRequired: 'Обязательное поле',
+        rssParser: 'Ошибка при парсинге RSS',
       }
     },
+    feedHeader: 'Фиды',
     button: 'Загрузить',
   }
 }
