@@ -9,8 +9,8 @@ export default (url, feeds) => {
     mixed: {
       required: 'form.errors.urlRequired',
       notOneOf: 'form.errors.urlDuplicate',
-    }
-  })
+    },
+  });
 
   const urlSchema = yup
     .string()

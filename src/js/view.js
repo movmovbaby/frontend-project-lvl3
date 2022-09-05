@@ -56,8 +56,8 @@ const handleErrors = (elements, i18n, value) => {
   elements.form.focus();
 };
 
-const handleFeeds = (elements, i18n, feeds) => {
-  const feedsContainer = elements.feedsContainer;
+const renderFeeds = (elements, i18n, feeds) => {
+  const { feedsContainer } = elements;
   feedsContainer.innerHTML = '';
 
   const card = document.createElement('div');
@@ -91,7 +91,51 @@ const handleFeeds = (elements, i18n, feeds) => {
 
   card.append(cardBody, feedsList);
   feedsContainer.append(card);
-}
+};
+
+const renderPosts = (elements, i18n, posts) => {
+  const { postsContainer } = elements;
+  postsContainer.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.classList.add('card', 'border-0');
+
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+
+  const cardTitle = document.createElement('h2');
+  cardTitle.classList.add('card-title', 'h4');
+  cardTitle.textContent = i18n.t('post.header');
+  cardBody.append(cardTitle);
+
+  const postsList = document.createElement('ul');
+  postsList.classList.add('list-group', 'border-0', 'rounded-0');
+
+  posts.forEach((post) => {
+    const postItem = document.createElement('li');
+    postItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+
+    const linkElement = document.createElement('a');
+    linkElement.classList.add('fw-bold');
+    linkElement.setAttribute('href', post.link);
+    linkElement.setAttribute('target', '_blank');
+    linkElement.setAttribute('rel', 'noopener noreferrer');
+    linkElement.textContent = post.title;
+
+    const buttonElement = document.createElement('button');
+    buttonElement.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    buttonElement.setAttribute('type', 'button');
+    buttonElement.setAttribute('data-bs-toggle', 'modal');
+    buttonElement.setAttribute('data-bs-target', '#modal');
+    buttonElement.textContent = i18n.t('post.button');
+    postItem.append(linkElement, buttonElement);
+
+    postsList.append(postItem);
+  });
+
+  card.append(cardBody, postsList);
+  postsContainer.append(card);
+};
 
 const render = (elements, i18n) => (path, value /* , prevValue */) => {
   switch (path) {
@@ -108,7 +152,12 @@ const render = (elements, i18n) => (path, value /* , prevValue */) => {
       break;
 
     case 'feeds':
-      handleFeeds(elements, i18n, value);
+      renderFeeds(elements, i18n, value);
+      break;
+
+    case 'posts':
+      renderPosts(elements, i18n, value);
+      break;
 
     default:
       break;

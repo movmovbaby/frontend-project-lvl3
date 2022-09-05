@@ -7,9 +7,13 @@ export default {
         urlDuplicate: 'RSS уже существует',
         urlRequired: 'Обязательное поле',
         rssParser: 'Ошибка при парсинге RSS',
-      }
+      },
     },
     feedHeader: 'Фиды',
+    post: {
+      'header': 'Посты',
+      'button': 'Просмотр',
+    },
     button: 'Загрузить',
-  }
-}
+  },
+};
