@@ -64,14 +64,25 @@ export default () => {
     const url = formData.get('url');
     state.form.fields.input = url;
 
-    validateURL(url, state.feeds)
+
+    validateURL(url, state.urls)
       .then((validUrl) => {
         state.form.valid = true;
+        state.urls.push(url);
         return validUrl;
       })
-      .then((url) => loadRSS(url))
+      .then((url) => {
+        state.form.processState = 'sending';
+        return loadRSS(url);
+      })
       .then((rss) => {
-        const [feed, posts] = rssParser(rss);
+        state.form.processState = 'sent';
+        const [rssFeed, rssPosts] = rssParser(rss);
+        const feedID = _.uniqueId();
+        const feed = { ...rssFeed, id: feedID, };
+        const posts = rssPosts.map((post) => {
+          return { ...post, id: _.uniqueId(), feedID };
+        });
         state.feeds = [feed, ...state.feeds];
         state.posts = [...posts, ...state.posts];
       })

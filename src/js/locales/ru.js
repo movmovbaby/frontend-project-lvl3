@@ -7,12 +7,15 @@ export default {
         urlDuplicate: 'RSS уже существует',
         urlRequired: 'Обязательное поле',
         rssParser: 'Ошибка при парсинге RSS',
+        networkError: 'Ошибка сети',
       },
     },
-    feedHeader: 'Фиды',
+    feed: {
+      header: 'Фиды',
+    },
     post: {
-      'header': 'Посты',
-      'button': 'Просмотр',
+      header: 'Посты',
+      button: 'Просмотр',
     },
     button: 'Загрузить',
   },

@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export default (url, feeds) => {
+export default (url, urls) => {
   yup.setLocale({
     string: {
       url: 'form.errors.urlInvalid',
@@ -16,7 +16,7 @@ export default (url, feeds) => {
     .string()
     .required()
     .url()
-    .notOneOf(feeds);
+    .notOneOf(urls);
 
   return urlSchema.validate(url);
 };

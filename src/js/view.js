@@ -1,8 +1,10 @@
 import onChange from 'on-change';
+import _ from 'lodash';
 
 const handleProcessState = (elements, processState) => {
   switch (processState) {
     case 'sent':
+      elements.submitButton.disabled = false;
       break;
 
     case 'error':
@@ -68,7 +70,7 @@ const renderFeeds = (elements, i18n, feeds) => {
 
   const cardTitle = document.createElement('h2');
   cardTitle.classList.add('card-title', 'h4');
-  cardTitle.textContent = i18n.t('feedHeader');
+  cardTitle.textContent = i18n.t('feed.header');
   cardBody.append(cardTitle);
 
   const feedsList = document.createElement('ul');
@@ -167,6 +169,7 @@ const render = (elements, i18n) => (path, value /* , prevValue */) => {
 export default (elements, i18n) => onChange({
   feeds: [],
   posts: [],
+  urls: [],
   errorType: null,
   form: {
     valid: null,
