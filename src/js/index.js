@@ -7,7 +7,7 @@ import loadRSS from './loadRSS.js';
 import resources from './locales/index.js';
 import updateRSS from './updateRSS.js';
 
-// http://lorem-rss.herokuapp.com/feed?unit=second&interval=5
+// http://lorem-rss.herokuapp.com/feed?unit=second&interval=5&length=1
 
 export default () => {
   const i18nInstance = i18n.createInstance();
@@ -26,7 +26,7 @@ export default () => {
     fields: {
       input: document.getElementById('url-input'),
     },
-    submitButton: document.querySelector('input[name="url"]'),
+    submitButton: document.querySelector('button[type="submit"]'),
     feedsContainer: document.querySelector('.feeds'),
     postsContainer: document.querySelector('.posts'),
   };
@@ -38,7 +38,6 @@ export default () => {
     const formData = new FormData(e.target);
     const url = formData.get('url');
     state.form.fields.input = url;
-
 
     validateURL(url, state.urls)
       .then((validUrl) => {
@@ -68,5 +67,5 @@ export default () => {
   });
 
 
-  setTimeout(() => updateRSS(state), 1000);
+  setTimeout(() => updateRSS(state), 5000);
 };
