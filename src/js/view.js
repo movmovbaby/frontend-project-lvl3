@@ -114,6 +114,7 @@ const renderPosts = (elements, i18n, posts) => {
   postsList.classList.add('list-group', 'border-0', 'rounded-0');
 
   posts.forEach((post) => {
+    const { id } = post;
     const postItem = document.createElement('li');
     postItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
@@ -122,6 +123,7 @@ const renderPosts = (elements, i18n, posts) => {
     linkElement.setAttribute('href', post.link);
     linkElement.setAttribute('target', '_blank');
     linkElement.setAttribute('rel', 'noopener noreferrer');
+    linkElement.setAttribute('data-id', id);
     linkElement.textContent = post.title;
 
     const buttonElement = document.createElement('button');
@@ -129,6 +131,7 @@ const renderPosts = (elements, i18n, posts) => {
     buttonElement.setAttribute('type', 'button');
     buttonElement.setAttribute('data-bs-toggle', 'modal');
     buttonElement.setAttribute('data-bs-target', '#modal');
+    buttonElement.setAttribute('data-id', id);
     buttonElement.textContent = i18n.t('post.button');
     postItem.append(linkElement, buttonElement);
 
@@ -139,7 +142,24 @@ const renderPosts = (elements, i18n, posts) => {
   postsContainer.append(card);
 };
 
-const render = (elements, i18n) => (path, value /* , prevValue */) => {
+const renderVisitedPosts = (elements, value) => {
+  const id = value.values().next().value;
+  const { postsContainer } = elements;
+  const visitedLink = postsContainer.querySelector(`a[data-id="${id}"]`);
+  visitedLink.classList.remove('fw-bold');
+  visitedLink.classList.add('fw-normal', 'link-secondary');
+};
+
+
+const renderModal = (state, elements, id) => {
+  const { modal } = elements;
+  const post = state.posts.filter((post) => post.id === id);
+  modal.querySelector('.modal-title').textContent = post.title;
+  modal.querySelector('.modal-body').textContent = post.description;
+  modal.querySelector('.full-article').href = post.link;
+};
+
+const render = (state, elements, i18n) => (path, value) => {
   switch (path) {
     case 'form.processState':
       handleProcessState(elements, value);
@@ -161,21 +181,16 @@ const render = (elements, i18n) => (path, value /* , prevValue */) => {
       renderPosts(elements, i18n, value);
       break;
 
+    case 'visitedPosts':
+      renderVisitedPosts(elements, value);
+
+    case 'dataIDForModal':
+      renderModal(state, elements, value);
     default:
       break;
   }
 };
 
-export default (elements, i18n) => onChange({
-  feeds: [],
-  posts: [],
-  urls: [],
-  errorType: null,
-  form: {
-    valid: null,
-    processState: 'filling',
-    fields: {
-      input: '',
-    },
-  },
-}, render(elements, i18n));
+
+
+export default (state, elements, i18n) => onChange(state, render(state, elements, i18n));

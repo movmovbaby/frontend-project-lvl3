@@ -7,8 +7,6 @@ import loadRSS from './loadRSS.js';
 import resources from './locales/index.js';
 import updateRSS from './updateRSS.js';
 
-// http://lorem-rss.herokuapp.com/feed?unit=second&interval=5&length=1
-
 export default () => {
   const i18nInstance = i18n.createInstance();
   i18nInstance
@@ -29,9 +27,26 @@ export default () => {
     submitButton: document.querySelector('button[type="submit"]'),
     feedsContainer: document.querySelector('.feeds'),
     postsContainer: document.querySelector('.posts'),
+    modal: document.querySelector('#modal'),
   };
 
-  const state = view(elements, i18nInstance);
+  const initialState = {
+    feeds: [],
+    posts: [],
+    urls: [],
+    errorType: null,
+    form: {
+      valid: null,
+      processState: 'filling',
+      fields: {
+        input: '',
+      },
+    },
+    visitedPosts: new Set(),
+    dataIDForModal: null,
+  };
+
+  const state = view(initialState, elements, i18nInstance);
 
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -66,6 +81,17 @@ export default () => {
       });
   });
 
+  elements.postsContainer.addEventListener('click', (e) => {
+    const clicked = e.target;
+    if (clicked.closest('a')) {
+      const { id } = clicked.dataset;
+      state.visitedPosts.add(id);
+    }
+    if (clicked.closest('button')) {
+      const { id } = clicked.dataset;
+      state.dataIDForModal = id;
+    }
+  });
 
   setTimeout(() => updateRSS(state), 5000);
 };
