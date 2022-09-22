@@ -1,3 +1,4 @@
+/* eslint-env browser */
 import i18n from 'i18next';
 import _ from 'lodash';
 import view from './view.js';
@@ -42,7 +43,7 @@ export default () => {
         input: '',
       },
     },
-    visitedPosts: new Set(),
+    visitedPosts: [],
     dataIDForModal: null,
   };
 
@@ -60,18 +61,16 @@ export default () => {
         state.urls.push(url);
         return validUrl;
       })
-      .then((url) => {
+      .then((validUrl) => {
         state.form.processState = 'sending';
-        return loadRSS(url);
+        return loadRSS(validUrl);
       })
       .then((rss) => {
         state.form.processState = 'sent';
         const [rssFeed, rssPosts] = parserRSS(rss);
         const feedID = _.uniqueId();
-        const feed = { ...rssFeed, id: feedID, url, };
-        const posts = rssPosts.map((post) => {
-          return { ...post, id: _.uniqueId(), feedID };
-        });
+        const feed = { ...rssFeed, id: feedID, url };
+        const posts = rssPosts.map((post) => ({ ...post, id: _.uniqueId(), feedID }));
         state.feeds = [feed, ...state.feeds];
         state.posts = [...posts, ...state.posts];
       })
