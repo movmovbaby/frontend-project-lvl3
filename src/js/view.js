@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-/* eslint-env browser */
 import onChange from 'on-change';
 
 const handleProcessState = (elements, processState) => {

@@ -1,4 +1,3 @@
-/* eslint-env browser */
 export default (rssFeed) => {
   const parsedXML = new DOMParser().parseFromString(rssFeed.data, 'application/xml');
   const parseError = parsedXML.querySelector('parsererror');
