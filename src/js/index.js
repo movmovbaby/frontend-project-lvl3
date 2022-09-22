@@ -43,7 +43,7 @@ export default () => {
         input: '',
       },
     },
-    visitedPosts: [],
+    visitedPosts: new Set(),
     dataIDForModal: null,
   };
 
@@ -88,6 +88,7 @@ export default () => {
     }
     if (clicked.closest('button')) {
       const { id } = clicked.dataset;
+      state.visitedPosts.add(id);
       state.dataIDForModal = id;
     }
   });

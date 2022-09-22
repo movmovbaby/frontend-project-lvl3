@@ -95,7 +95,7 @@ const renderFeeds = (elements, i18n, feeds) => {
   feedsContainer.append(card);
 };
 
-const renderPosts = (elements, i18n, posts) => {
+const renderPosts = (state, elements, i18n) => {
   const { postsContainer } = elements;
   postsContainer.innerHTML = '';
 
@@ -113,18 +113,19 @@ const renderPosts = (elements, i18n, posts) => {
   const postsList = document.createElement('ul');
   postsList.classList.add('list-group', 'border-0', 'rounded-0');
 
-  posts.forEach((post) => {
-    const { id } = post;
+  state.posts.forEach((post) => {
+    const { id, title, link } = post;
     const postItem = document.createElement('li');
     postItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
     const linkElement = document.createElement('a');
-    linkElement.classList.add('fw-bold');
-    linkElement.setAttribute('href', post.link);
+    const linkClass = state.visitedPosts.has(id) ? 'fw-normal link-secondary' : 'fw-bold';
+    linkElement.setAttribute('class', linkClass);
+    linkElement.setAttribute('href', link);
     linkElement.setAttribute('target', '_blank');
     linkElement.setAttribute('rel', 'noopener noreferrer');
     linkElement.setAttribute('data-id', id);
-    linkElement.textContent = post.title;
+    linkElement.textContent = title;
 
     const buttonElement = document.createElement('button');
     buttonElement.classList.add('btn', 'btn-outline-primary', 'btn-sm');
@@ -142,24 +143,15 @@ const renderPosts = (elements, i18n, posts) => {
   postsContainer.append(card);
 };
 
-const renderVisitedPosts = (elements, value) => {
-  const id = value.values().next().value;
-  const { postsContainer } = elements;
-  const visitedLink = postsContainer.querySelector(`a[data-id="${id}"]`);
-  visitedLink.classList.remove('fw-bold');
-  visitedLink.classList.add('fw-normal', 'link-secondary');
-};
-
 const renderModal = (state, elements, id) => {
   const { modal } = elements;
-  const clickedPost = state.posts.filter((post) => post.id === id);
-  const { title, description, link } = clickedPost;
+  const { title, description, link } = state.posts.filter((post) => post.id === id)[0];
   modal.querySelector('.modal-title').textContent = title;
   modal.querySelector('.modal-body').textContent = description;
   modal.querySelector('.full-article').href = link;
 };
 
-const render = (state, elements, i18n) => (path, value, prevValue) => {
+const render = (state, elements, i18n) => (path, value) => {
   switch (path) {
     case 'form.processState':
       handleProcessState(elements, value);
@@ -178,11 +170,11 @@ const render = (state, elements, i18n) => (path, value, prevValue) => {
       break;
 
     case 'posts':
-      renderPosts(elements, i18n, value);
+      renderPosts(state, elements, i18n, value);
       break;
 
     case 'visitedPosts':
-      renderVisitedPosts(elements, value, prevValue);
+      renderPosts(state, elements, i18n, value);
       break;
 
     case 'dataIDForModal':
