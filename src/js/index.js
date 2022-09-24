@@ -68,10 +68,10 @@ export default () => {
         const posts = rssPosts.map((post) => ({ ...post, id: _.uniqueId(), feedID }));
         state.feeds = [feed, ...state.feeds];
         state.posts = [...posts, ...state.posts];
-        state.form.valid = true;
+        state.form.processState = 'dataLoaded';
       })
       .catch((error) => {
-        if (error.name = 'ValidationError') {
+        if (error.name === 'ValidationError') {
           state.form.valid = false;
         }
         state.errorType = error.type;

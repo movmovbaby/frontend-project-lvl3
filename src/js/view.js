@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import onChange from 'on-change';
 
-const handleProcessState = (elements, processState) => {
+const handleProcessState = (elements, i18n, processState) => {
   switch (processState) {
     case 'sent':
       elements.submitButton.disabled = false;
@@ -16,6 +16,14 @@ const handleProcessState = (elements, processState) => {
 
     case 'filling':
       elements.submitButton.disabled = false;
+      break;
+
+    case 'dataLoaded':
+      elements.feedback.textContent = i18n.t('form.rssValid');
+      elements.feedback.classList.remove('text-danger');
+      elements.feedback.classList.add('text-success');
+      elements.form.reset();
+      elements.form.focus();
       break;
 
     default:
@@ -158,7 +166,7 @@ const renderModal = (state, elements, id) => {
 const render = (state, elements, i18n) => (path, value) => {
   switch (path) {
     case 'form.processState':
-      handleProcessState(elements, value);
+      handleProcessState(elements, i18n, value);
       break;
 
     case 'form.valid':
