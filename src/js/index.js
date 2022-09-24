@@ -1,4 +1,3 @@
-/* eslint-env browser */
 import i18n from 'i18next';
 import _ from 'lodash';
 import view from './view.js';
@@ -37,11 +36,9 @@ export default () => {
     urls: [],
     errorType: null,
     form: {
+      error: null,
       valid: null,
       processState: 'filling',
-      fields: {
-        input: '',
-      },
     },
     visitedPosts: new Set(),
     dataIDForModal: null,
@@ -53,11 +50,9 @@ export default () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const url = formData.get('url');
-    state.form.fields.input = url;
 
     validateURL(url, state.urls)
       .then((validUrl) => {
-        state.form.valid = true;
         state.urls.push(url);
         return validUrl;
       })
@@ -73,10 +68,16 @@ export default () => {
         const posts = rssPosts.map((post) => ({ ...post, id: _.uniqueId(), feedID }));
         state.feeds = [feed, ...state.feeds];
         state.posts = [...posts, ...state.posts];
+        state.form.valid = true;
       })
       .catch((error) => {
+        if (error.name = 'ValidationError') {
+          state.form.valid = false;
+        }
         state.errorType = error.type;
-        state.form.valid = false;
+        if (error.rssInvalid) {
+          state.errorType = 'rssInvalid';
+        }
       });
   });
 

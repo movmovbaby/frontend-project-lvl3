@@ -25,7 +25,7 @@ const handleProcessState = (elements, processState) => {
 
 const handleFormValid = (elements, i18n, value) => {
   if (value === true) {
-    elements.feedback.textContent = i18n.t('form.urlValid');
+    elements.feedback.textContent = i18n.t('form.rssValid');
     elements.feedback.classList.remove('text-danger');
     elements.feedback.classList.add('text-success');
   }
@@ -48,6 +48,10 @@ const handleErrors = (elements, i18n, value) => {
 
     case 'rssParser':
       elements.feedback.textContent = i18n.t('form.errors.rssParser');
+      break;
+
+    case 'rssInvalid':
+      elements.feedback.textContent = i18n.t('form.errors.rssInvalid');
       break;
 
     default:

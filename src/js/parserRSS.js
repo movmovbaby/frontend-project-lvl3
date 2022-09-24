@@ -4,10 +4,9 @@ export default (rssFeed) => {
   if (parseError) {
     const textError = parseError.textContent;
     const error = new Error(textError);
-    error.NotValidRss = true;
+    error.rssInvalid = true;
     throw error;
   }
-
   const feed = {
     title: parsedXML.querySelector('channel title').textContent,
     description: parsedXML.querySelector('channel description').textContent,
