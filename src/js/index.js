@@ -21,9 +21,7 @@ export default () => {
   const elements = {
     form: document.querySelector('.rss-form'),
     feedback: document.querySelector('.feedback'),
-    fields: {
-      input: document.getElementById('url-input'),
-    },
+    input: document.getElementById('url-input'),
     submitButton: document.querySelector('button[type="submit"]'),
     feedsContainer: document.querySelector('.feeds'),
     postsContainer: document.querySelector('.posts'),
@@ -34,7 +32,7 @@ export default () => {
     feeds: [],
     posts: [],
     urls: [],
-    errorType: null,
+    // errorType: null,
     form: {
       error: null,
       valid: null,
@@ -71,12 +69,11 @@ export default () => {
         state.form.processState = 'dataLoaded';
       })
       .catch((error) => {
+        state.form.valid = error.name !== 'ValidationError';
         if (error.name === 'ValidationError') {
-          state.form.valid = false;
-        }
-        state.errorType = error.type;
-        if (error.rssInvalid) {
-          state.errorType = 'rssInvalid';
+          state.form.error = error.message;
+        } else if (error.rssInvalid) {
+          state.form.error = 'form.errors.rssInvalid';
         }
       });
   });

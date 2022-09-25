@@ -31,14 +31,12 @@ const handleProcessState = (elements, i18n, processState) => {
   }
 };
 
-const handleFormValid = (elements, i18n, value) => {
-  if (value === true) {
-    elements.feedback.textContent = i18n.t('form.rssValid');
-    elements.feedback.classList.remove('text-danger');
-    elements.feedback.classList.add('text-success');
+const handleFormValid = (elements, value) => {
+  if (value === false) {
+    elements.input.classList.add('is-invalid');
+    return;
   }
-  elements.form.reset();
-  elements.form.focus();
+  elements.input.classList.remove('is-invalid');
 };
 
 const handleErrors = (elements, i18n, value) => {
@@ -170,10 +168,10 @@ const render = (state, elements, i18n) => (path, value) => {
       break;
 
     case 'form.valid':
-      handleFormValid(elements, i18n, value);
+      handleFormValid(elements, value);
       break;
 
-    case 'errorType':
+    case 'form.error':
       handleErrors(elements, i18n, value);
       break;
 
