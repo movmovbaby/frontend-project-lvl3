@@ -44,20 +44,20 @@ const handleErrors = (elements, i18n, value) => {
   elements.feedback.classList.remove('text-success');
   elements.feedback.classList.add('text-danger');
   switch (value) {
-    case 'notOneOf':
-      elements.feedback.textContent = i18n.t('form.errors.urlDuplicate');
+    case 'form.error.urlDuplicate':
+      elements.feedback.textContent = i18n.t('form.error.urlDuplicate');
       break;
 
-    case 'url':
-      elements.feedback.textContent = i18n.t('form.errors.urlInvalid');
+    case 'form.error.urlInvalid':
+      elements.feedback.textContent = i18n.t('form.error.urlInvalid');
       break;
 
-    case 'rssParser':
-      elements.feedback.textContent = i18n.t('form.errors.rssParser');
+    case 'form.error.rssParser':
+      elements.feedback.textContent = i18n.t('form.error.rssParser');
       break;
 
-    case 'rssInvalid':
-      elements.feedback.textContent = i18n.t('form.errors.rssInvalid');
+    case 'form.error.rssInvalid':
+      elements.feedback.textContent = i18n.t('form.error.rssInvalid');
       break;
 
     default:

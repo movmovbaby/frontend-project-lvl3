@@ -3,12 +3,12 @@ import * as yup from 'yup';
 export default (url, urls) => {
   yup.setLocale({
     string: {
-      url: 'form.errors.urlInvalid',
+      url: 'form.error.urlInvalid',
     },
 
     mixed: {
-      required: 'form.errors.urlRequired',
-      notOneOf: 'form.errors.urlDuplicate',
+      required: 'form.error.urlRequired',
+      notOneOf: 'form.error.urlDuplicate',
     },
   });
 

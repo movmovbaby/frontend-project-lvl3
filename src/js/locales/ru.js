@@ -2,7 +2,7 @@ export default {
   translation: {
     form: {
       rssValid: 'RSS успешно загружен',
-      errors: {
+      error: {
         urlInvalid: 'Ссылка должна быть валидным URL',
         urlDuplicate: 'RSS уже существует',
         urlRequired: 'Обязательное поле',

@@ -51,6 +51,7 @@ export default () => {
 
     validateURL(url, state.urls)
       .then((validUrl) => {
+        state.form.valid = true;
         state.urls.push(url);
         return validUrl;
       })
@@ -73,7 +74,7 @@ export default () => {
         if (error.name === 'ValidationError') {
           state.form.error = error.message;
         } else if (error.rssInvalid) {
-          state.form.error = 'form.errors.rssInvalid';
+          state.form.error = 'form.error.rssInvalid';
         }
       });
   });
