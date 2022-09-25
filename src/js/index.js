@@ -75,6 +75,8 @@ export default () => {
           state.form.error = error.message;
         } else if (error.rssInvalid) {
           state.form.error = 'form.error.rssInvalid';
+        } else if (error.name === 'AxiosError') {
+          state.form.error = 'form.error.networkError';
         }
       });
   });

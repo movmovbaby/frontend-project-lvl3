@@ -7,9 +7,6 @@ const handleProcessState = (elements, i18n, processState) => {
       elements.submitButton.disabled = false;
       break;
 
-    case 'error':
-      break;
-
     case 'sending':
       elements.submitButton.disabled = true;
       break;
@@ -58,6 +55,10 @@ const handleErrors = (elements, i18n, value) => {
 
     case 'form.error.rssInvalid':
       elements.feedback.textContent = i18n.t('form.error.rssInvalid');
+      break;
+
+    case 'form.error.networkError':
+      elements.feedback.textContent = i18n.t('form.error.networkError');
       break;
 
     default:
