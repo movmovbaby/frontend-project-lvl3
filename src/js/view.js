@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import onChange from 'on-change';
 
 const handleProcessState = (elements, i18n, processState) => {
@@ -130,7 +129,7 @@ const renderPosts = (state, elements, i18n) => {
     postItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
     const linkElement = document.createElement('a');
-    const linkClass = state.visitedPosts.has(id) ? 'fw-normal link-secondary' : 'fw-bold';
+    const linkClass = state.uiState.visitedPosts.has(id) ? 'fw-normal link-secondary' : 'fw-bold';
     linkElement.setAttribute('class', linkClass);
     linkElement.setAttribute('href', link);
     linkElement.setAttribute('target', '_blank');
@@ -184,11 +183,11 @@ const render = (state, elements, i18n) => (path, value) => {
       renderPosts(state, elements, i18n, value);
       break;
 
-    case 'visitedPosts':
+    case 'uiState.visitedPosts':
       renderPosts(state, elements, i18n, value);
       break;
 
-    case 'dataIDForModal':
+    case 'uiState.dataIDForModal':
       renderModal(state, elements, value);
       break;
 

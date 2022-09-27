@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import _ from 'lodash';
 import loadRSS from './loadRSS.js';
 import parserRSS from './parserRSS.js';

@@ -1,13 +1,34 @@
 import i18n from 'i18next';
 import _ from 'lodash';
+import * as yup from 'yup';
 import view from './view.js';
-import validateURL from './validateURL.js';
 import parserRSS from './parserRSS.js';
 import loadRSS from './loadRSS.js';
 import resources from './locales/index.js';
 import updateRSS from './updateRSS.js';
 
 export default () => {
+  const validateURL = (url, urls) => {
+    yup.setLocale({
+      string: {
+        url: 'form.error.urlInvalid',
+      },
+
+      mixed: {
+        required: 'form.error.urlRequired',
+        notOneOf: 'form.error.urlDuplicate',
+      },
+    });
+
+    const urlSchema = yup
+      .string()
+      .required()
+      .url()
+      .notOneOf(urls);
+
+    return urlSchema.validate(url);
+  };
+
   const i18nInstance = i18n.createInstance();
   i18nInstance
     .init({
@@ -32,14 +53,16 @@ export default () => {
     feeds: [],
     posts: [],
     urls: [],
-    // errorType: null,
     form: {
       error: null,
       valid: null,
       processState: 'filling',
     },
-    visitedPosts: new Set(),
-    dataIDForModal: null,
+    uiState: {
+      visitedPosts: new Set(),
+      dataIDForModal: null,
+    }
+
   };
 
   const state = view(initialState, elements, i18nInstance);
@@ -85,12 +108,12 @@ export default () => {
     const clicked = e.target;
     if (clicked.closest('a')) {
       const { id } = clicked.dataset;
-      state.visitedPosts.add(id);
+      state.uiState.visitedPosts.add(id);
     }
     if (clicked.closest('button')) {
       const { id } = clicked.dataset;
-      state.visitedPosts.add(id);
-      state.dataIDForModal = id;
+      state.uiState.visitedPosts.add(id);
+      state.uiState.dataIDForModal = id;
     }
   });
 
