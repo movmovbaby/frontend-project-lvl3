@@ -61,7 +61,7 @@ export default () => {
     uiState: {
       visitedPosts: new Set(),
       dataIDForModal: null,
-    }
+    },
 
   };
 
