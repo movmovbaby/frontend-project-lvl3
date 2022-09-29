@@ -1,44 +1,9 @@
-import i18n from 'i18next';
 import _ from 'lodash';
 import * as yup from 'yup';
 import view from './view.js';
-import parserRSS from './parserRSS.js';
-import loadRSS from './loadRSS.js';
-import resources from './locales/index.js';
-import updateRSS from './updateRSS.js';
+import { loadRSS, parserRSS, updateRSS } from './rssUtils.js';
 
-export default () => {
-  const validateURL = (url, urls) => {
-    yup.setLocale({
-      string: {
-        url: 'form.error.urlInvalid',
-      },
-
-      mixed: {
-        required: 'form.error.urlRequired',
-        notOneOf: 'form.error.urlDuplicate',
-      },
-    });
-
-    const urlSchema = yup
-      .string()
-      .required()
-      .url()
-      .notOneOf(urls);
-
-    return urlSchema.validate(url);
-  };
-
-  const i18nInstance = i18n.createInstance();
-  i18nInstance
-    .init({
-      lng: 'ru',
-      debug: false,
-      resources,
-    })
-    .then(() => console.log('i18n loaded'))
-    .catch(() => console.log('i18n not loaded'));
-
+export default (i18nInstance) => {
   const elements = {
     form: document.querySelector('.rss-form'),
     feedback: document.querySelector('.feedback'),
@@ -47,6 +12,27 @@ export default () => {
     feedsContainer: document.querySelector('.feeds'),
     postsContainer: document.querySelector('.posts'),
     modal: document.querySelector('#modal'),
+  };
+
+  yup.setLocale({
+    string: {
+      url: 'form.error.urlInvalid',
+    },
+
+    mixed: {
+      required: 'form.error.urlRequired',
+      notOneOf: 'form.error.urlDuplicate',
+    },
+  });
+
+  const validateURL = (url, urls) => {
+    const urlSchema = yup
+      .string()
+      .required()
+      .url()
+      .notOneOf(urls);
+
+    return urlSchema.validate(url);
   };
 
   const initialState = {
@@ -62,7 +48,6 @@ export default () => {
       visitedPosts: new Set(),
       dataIDForModal: null,
     },
-
   };
 
   const state = view(initialState, elements, i18nInstance);
@@ -84,12 +69,12 @@ export default () => {
       })
       .then((rss) => {
         state.form.processState = 'sent';
-        const [rssFeed, rssPosts] = parserRSS(rss);
+        const { feed, posts } = parserRSS(rss);
         const feedID = _.uniqueId();
-        const feed = { ...rssFeed, id: feedID, url };
-        const posts = rssPosts.map((post) => ({ ...post, id: _.uniqueId(), feedID }));
-        state.feeds = [feed, ...state.feeds];
-        state.posts = [...posts, ...state.posts];
+        const rssFeed = { ...feed, id: feedID, url };
+        const rssPosts = posts.map((post) => ({ ...post, id: _.uniqueId(), feedID }));
+        state.feeds = [rssFeed, ...state.feeds];
+        state.posts = [...rssPosts, ...state.posts];
         state.form.processState = 'dataLoaded';
       })
       .catch((error) => {
