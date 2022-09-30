@@ -25,15 +25,12 @@ export default (i18nInstance) => {
     },
   });
 
-  const validateURL = (url, urls) => {
-    const urlSchema = yup
-      .string()
-      .required()
-      .url()
-      .notOneOf(urls);
+  const urlSchema = yup
+    .string()
+    .required()
+    .url();
 
-    return urlSchema.validate(url);
-  };
+  const validateURL = (url, urls) => urlSchema.notOneOf(urls).validate(url);
 
   const initialState = {
     feeds: [],
@@ -61,9 +58,6 @@ export default (i18nInstance) => {
       .then((validUrl) => {
         state.form.valid = true;
         state.urls.push(url);
-        return validUrl;
-      })
-      .then((validUrl) => {
         state.form.processState = 'sending';
         return loadRSS(validUrl);
       })
