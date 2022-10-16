@@ -107,5 +107,6 @@ export default () => {
       });
 
       setTimeout(() => updateRSS(state), 5000);
-    });
+    })
+    .catch((e) => console.error(e));
 };
